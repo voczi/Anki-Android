@@ -24,8 +24,6 @@ jobs:
     timeout-minutes: 30
     runs-on: ubuntu-latest
     env:
-      # could be better, '/home/runner' should be '~/' but neither that nor '$HOME' worked
-      STOREFILEDIR: /home/runner/src
       STOREFILE: android-keystore
       STOREPASS: testpass
       KEYPASS: testpass
@@ -39,6 +37,8 @@ jobs:
 
       - name: Test Credential Prep
         run: |
+          export STOREFILEDIR=$HOME/src
+          echo "STOREFILEDIR=$STOREFILEDIR" >> $GITHUB_ENV
           echo "KSTOREPWD=$STOREPASS" >> $GITHUB_ENV
           echo "KEYPWD=$KEYPASS" >> $GITHUB_ENV
           mkdir $STOREFILEDIR
