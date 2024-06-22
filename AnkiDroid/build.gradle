@@ -85,10 +85,10 @@ android {
     }
     signingConfigs {
         release {
-            storeFile file("${homePath}/src/android-keystore")
-            keyAlias "nrkeystorealias"
-            storePassword System.getenv("KSTOREPWD")
-            keyPassword System.getenv("KEYPWD")
+            storeFile file(System.getenv("KEYSTOREPATH") ?: "${homePath}/src/android-keystore")
+            storePassword System.getenv("KEYSTOREPWD") ?: System.getenv("KSTOREPWD")
+            keyAlias System.getenv("KEYALIAS") ?: "nrkeystorealias"
+            keyPassword System.getenv("KEYPWD") ?: System.getenv("KEYPWD")
         }
     }
     buildTypes {
