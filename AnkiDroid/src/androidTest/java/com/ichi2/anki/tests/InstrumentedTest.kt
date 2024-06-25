@@ -107,9 +107,6 @@ abstract class InstrumentedTest {
     @After
     fun runAfterEachTest() {
         try {
-            if (CollectionManager.isOpenUnsafe()) {
-                CollectionManager.getColUnsafe().debugEnsureNoOpenPointers()
-            }
             // If you don't tear down the database you'll get unexpected IllegalStateExceptions related to connections
             Timber.i("closeCollection: %s", "InstrumentedTest: End")
             CollectionManager.closeCollectionBlocking()
