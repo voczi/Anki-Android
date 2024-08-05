@@ -215,6 +215,9 @@ class ReviewerFragment :
                 answerButtonsLayout.isVisible = false
             }
         }
+        
+        hardButton.isVisible = false
+        easyButton.isVisible = false
     }
 
     private fun setupCounts(view: View) {
