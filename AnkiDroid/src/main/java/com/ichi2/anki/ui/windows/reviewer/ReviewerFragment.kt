@@ -24,12 +24,18 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.webkit.WebView
+import android.widget.FrameLayout
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.annotation.StringRes
 import androidx.appcompat.view.menu.MenuBuilder
 import androidx.appcompat.widget.ThemeUtils
 import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.isVisible
+import androidx.core.view.updatePadding
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.flowWithLifecycle
 import androidx.lifecycle.lifecycleScope
@@ -49,6 +55,7 @@ import com.ichi2.anki.snackbar.SnackbarBuilder
 import com.ichi2.anki.snackbar.showSnackbar
 import com.ichi2.anki.utils.ext.collectIn
 import com.ichi2.anki.utils.ext.collectLatestIn
+import com.ichi2.anki.utils.ext.sharedPrefs
 import com.ichi2.anki.utils.navBarNeedsScrim
 import com.ichi2.libanki.sched.Counts
 import com.ichi2.utils.increaseHorizontalPaddingOfOverflowMenuIcons
@@ -80,6 +87,7 @@ class ReviewerFragment :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        setupImmersiveMode(view)
         setupAnswerButtons(view)
         setupCounts(view)
 
@@ -158,18 +166,37 @@ class ReviewerFragment :
     }
 
     private fun setupAnswerButtons(view: View) {
-        view.findViewById<MaterialButton>(R.id.again_button).setOnClickListener {
-            viewModel.answerAgain()
+        val hideAnswerButtons = sharedPrefs().getBoolean(getString(R.string.hide_answer_buttons_key), false)
+        if (hideAnswerButtons) {
+            view.findViewById<FrameLayout>(R.id.buttons_area).isVisible = false
+            return
         }
-        view.findViewById<MaterialButton>(R.id.hard_button).setOnClickListener {
-            viewModel.answerHard()
+
+        fun MaterialButton.setAnswerButtonNextTime(@StringRes title: Int, nextTime: String?) {
+            val titleString = context.getString(title)
+            text = ReviewerViewModel.buildAnswerButtonText(titleString, nextTime)
         }
-        view.findViewById<MaterialButton>(R.id.good_button).setOnClickListener {
-            viewModel.answerGood()
+
+        val againButton = view.findViewById<MaterialButton>(R.id.again_button).apply {
+            setOnClickListener { viewModel.answerAgain() }
         }
-        view.findViewById<MaterialButton>(R.id.easy_button).setOnClickListener {
-            viewModel.answerEasy()
+        val hardButton = view.findViewById<MaterialButton>(R.id.hard_button).apply {
+            setOnClickListener { viewModel.answerHard() }
         }
+        val goodButton = view.findViewById<MaterialButton>(R.id.good_button).apply {
+            setOnClickListener { viewModel.answerGood() }
+        }
+        val easyButton = view.findViewById<MaterialButton>(R.id.easy_button).apply {
+            setOnClickListener { viewModel.answerEasy() }
+        }
+
+        viewModel.answerButtonsNextTimeFlow.flowWithLifecycle(lifecycle)
+            .collectIn(lifecycleScope) { times ->
+                againButton.setAnswerButtonNextTime(R.string.ease_button_again, times?.again)
+                hardButton.setAnswerButtonNextTime(R.string.ease_button_hard, times?.hard)
+                goodButton.setAnswerButtonNextTime(R.string.ease_button_good, times?.good)
+                easyButton.setAnswerButtonNextTime(R.string.ease_button_easy, times?.easy)
+            }
 
         val showAnswerButton = view.findViewById<MaterialButton>(R.id.show_answer).apply {
             setOnClickListener {
@@ -284,6 +311,39 @@ class ReviewerFragment :
             }
     }
 
+    private fun setupImmersiveMode(view: View) {
+        val hideSystemBarsSetting = HideSystemBars.from(requireContext())
+        val barsToHide = when (hideSystemBarsSetting) {
+            HideSystemBars.NONE -> return
+            HideSystemBars.STATUS_BAR -> WindowInsetsCompat.Type.statusBars()
+            HideSystemBars.NAVIGATION_BAR -> WindowInsetsCompat.Type.navigationBars()
+            HideSystemBars.ALL -> WindowInsetsCompat.Type.systemBars()
+        }
+
+        val window = requireActivity().window
+        with(WindowInsetsControllerCompat(window, window.decorView)) {
+            hide(barsToHide)
+            systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+        }
+
+        val ignoreDisplayCutout = sharedPrefs().getBoolean(getString(R.string.ignore_display_cutout_key), false)
+        ViewCompat.setOnApplyWindowInsetsListener(view) { v, insets ->
+            val typeMask = if (ignoreDisplayCutout) {
+                WindowInsetsCompat.Type.systemBars()
+            } else {
+                WindowInsetsCompat.Type.systemBars() or WindowInsetsCompat.Type.displayCutout()
+            }
+            val bars = insets.getInsets(typeMask)
+            v.updatePadding(
+                left = bars.left,
+                top = bars.top,
+                right = bars.right,
+                bottom = bars.bottom
+            )
+            WindowInsetsCompat.CONSUMED
+        }
+    }
+
     private val noteEditorLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.data?.getBooleanExtra(NoteEditor.RELOAD_REQUIRED_EXTRA_KEY, false) == true ||
@@ -295,7 +355,7 @@ class ReviewerFragment :
 
     private fun launchEditNote() {
         lifecycleScope.launch {
-            val intent = viewModel.getEditNoteDestination().toIntent(requireContext())
+            val intent = viewModel.getEditNoteDestination().getIntent(requireContext())
             noteEditorLauncher.launch(intent)
         }
     }

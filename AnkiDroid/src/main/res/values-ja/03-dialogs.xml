@@ -61,10 +61,6 @@
     <plurals name="reset_cards_dialog_acknowledge">
         <item quantity="other">%d枚のカードの学習履歴をリセットしました</item>
     </plurals>
-    <!-- Reschedule Card Dialog -->
-    <plurals name="reschedule_cards_dialog_acknowledge">
-        <item quantity="other">%d枚のカードのスケジュールを変更しました</item>
-    </plurals>
     <string name="answering_error_title">データベース エラー</string>
     <string name="answering_error_message">コレクションへの書き込み中にエラーが発生しました。データベースの破損しているか、ストレージの空き容量が不足している可能性があります。\n\n繰り返しエラーが発生する場合には、「データベースをチェック」、コレクションの修復、「バックアップから復元」を試してみてください。\nまた、AnkiDroidのバグである可能性が考えられる場合は、開発者にご報告ください。</string>
     <string name="answering_error_report">エラーを報告</string>
@@ -105,9 +101,9 @@
     <string name="dialog_positive_repair">修復</string>
     <string name="dialog_positive_replace">上書き</string>
     <string name="dialog_collection_path_not_dir">指定されたパスは有効なディレクトリではありませんでした</string>
-    <string name="dialog_invalid_custom_certificate">The provided text does not resolve to a valid PEM-encoded X509 certificate</string>
-    <string name="dialog_invalid_custom_certificate_title">Error parsing certificate</string>
-    <string name="dialog_updated_custom_certificate">Certificate updated</string>
+    <string name="dialog_invalid_custom_certificate">提供されたテキストをPEMエンコードしても有効な X.509証明書になりません</string>
+    <string name="dialog_invalid_custom_certificate_title">証明書の解析エラー</string>
+    <string name="dialog_updated_custom_certificate">証明書が更新されました</string>
     <!-- Media checking -->
     <string name="check_media_title">メディアをチェックしますか？</string>
     <string name="check_media_warning">大きなコレクションの場合は、長い時間がかかる場合があります。</string>
@@ -250,6 +246,8 @@
     <string name="cloze_note_required">「穴埋め問題」用のノートタイプが必要です</string>
     <string name="cloze_not_found_message">「穴埋め問題」に対応したノートタイプが見つかりませんでした。アプリで「穴埋め問題」に対応したノートタイプを追加してからもう一度試すか、それ以外のノートタイプのノートを編集するため、「開く」ボタンを押してください。</string>
     <string name="open">開く</string>
+    <string name="change_cloze_number">穴埋め問題の番号を変更</string>
+    <string name="cloze_number">穴埋め問題番号</string>
     <!-- Outdated WebView dialog -->
     <string name="webview_update_message">「AndroidシステムのWebView 」（または「Android System WebView」）が古くなっています。いくつかの機能が正しく動作しません。更新してください。\n\nインストールされているバージョン: %1$d\n最低限必要なバージョン: %2$d</string>
 </resources>

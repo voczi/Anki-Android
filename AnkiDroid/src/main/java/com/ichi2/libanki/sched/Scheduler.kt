@@ -27,7 +27,19 @@ import anki.config.OptionalStringConfigKey
 import anki.config.optionalStringConfigKey
 import anki.frontend.SchedulingStatesWithContext
 import anki.i18n.FormatTimespanRequest
-import anki.scheduler.*
+import anki.scheduler.BuryOrSuspendCardsRequest
+import anki.scheduler.CardAnswer
+import anki.scheduler.CongratsInfoResponse
+import anki.scheduler.CustomStudyDefaultsResponse
+import anki.scheduler.CustomStudyRequest
+import anki.scheduler.QueuedCards
+import anki.scheduler.SchedTimingTodayResponse
+import anki.scheduler.SchedulingContext
+import anki.scheduler.SchedulingState
+import anki.scheduler.SchedulingStates
+import anki.scheduler.UnburyDeckRequest
+import anki.scheduler.cardAnswer
+import anki.scheduler.scheduleCardsAsNewRequest
 import com.google.android.material.snackbar.Snackbar
 import com.ichi2.anki.R
 import com.ichi2.anki.snackbar.showSnackbar
@@ -41,6 +53,7 @@ import com.ichi2.libanki.DeckId
 import com.ichi2.libanki.EpochSeconds
 import com.ichi2.libanki.NoteId
 import com.ichi2.libanki.Utils
+import com.ichi2.libanki.utils.LibAnkiAlias
 import com.ichi2.libanki.utils.NotInLibAnki
 import com.ichi2.libanki.utils.TimeManager.time
 import net.ankiweb.rsdroid.RustCleanup
@@ -114,6 +127,7 @@ open class Scheduler(val col: Collection) {
     }
 
     /** The time labels for the four answer buttons. */
+    @LibAnkiAlias("describe_next_states")
     fun describeNextStates(states: SchedulingStates): List<String> {
         return col.backend.describeNextStates(states)
     }

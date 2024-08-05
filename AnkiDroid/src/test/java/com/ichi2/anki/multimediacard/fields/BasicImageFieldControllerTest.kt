@@ -28,7 +28,8 @@ import com.ichi2.anki.multimediacard.activity.MultimediaEditFieldActivityTestBas
 import com.ichi2.testutils.AnkiAssert
 import com.ichi2.testutils.MockContentResolver
 import org.hamcrest.MatcherAssert.assertThat
-import org.hamcrest.Matchers.*
+import org.hamcrest.Matchers.equalTo
+import org.hamcrest.Matchers.instanceOf
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mockito.mock
@@ -133,7 +134,7 @@ open class BasicImageFieldControllerTest : MultimediaEditFieldActivityTestBase()
 
     private fun imageFieldWithData(): IField {
         val field = emptyImageField()
-        field.imagePath = targetContext.cacheDir.toString() + "/temp-photos/test"
+        field.mediaPath = targetContext.cacheDir.toString() + "/temp-photos/test"
         return field
     }
 

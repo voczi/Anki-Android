@@ -63,11 +63,6 @@
         <item quantity="one">%d kart sıfırlandı</item>
         <item quantity="other">%d kart sıfırlandı</item>
     </plurals>
-    <!-- Reschedule Card Dialog -->
-    <plurals name="reschedule_cards_dialog_acknowledge">
-        <item quantity="one">%d kart yeniden planlandı</item>
-        <item quantity="other">%d kartın zamanı değiştirildi</item>
-    </plurals>
     <string name="answering_error_title">Veritabanı hatası</string>
     <string name="answering_error_message">Koleksiyona yazılamadı. Veritabanı bozuk olabilir veya diskte yeterli boş alan olmayabilir.\n\nBu daha sık oluyorsa, veritabanını kontrol etmeyi, koleksiyonu onarmayı veya bir yedekten geri yüklemeyi deneyin. Bunun için \"seçenekler\"e dokunun.\n\Veya bu bir AnkiDroid hatası da olabilir; Bunu kontrol edebilmemiz için lütfen hatayı bildirin.</string>
     <string name="answering_error_report">Hatayı bildir</string>
@@ -108,9 +103,9 @@
     <string name="dialog_positive_repair">Onar</string>
     <string name="dialog_positive_replace">Değiştir</string>
     <string name="dialog_collection_path_not_dir">Belirtilen konum geçerli bir dizin değildi.</string>
-    <string name="dialog_invalid_custom_certificate">The provided text does not resolve to a valid PEM-encoded X509 certificate</string>
-    <string name="dialog_invalid_custom_certificate_title">Error parsing certificate</string>
-    <string name="dialog_updated_custom_certificate">Certificate updated</string>
+    <string name="dialog_invalid_custom_certificate">Verilen metin geçerli bir PEM-kodlanmış X509 sertifikasına çözümlenmiyor</string>
+    <string name="dialog_invalid_custom_certificate_title">Sertifika çözümlemesinde hata</string>
+    <string name="dialog_updated_custom_certificate">Sertifika güncellendi</string>
     <!-- Media checking -->
     <string name="check_media_title">Medya kontrol edilsin mi?</string>
     <string name="check_media_warning">Bu, büyük medya koleksiyonlarıyla uzun sürebilir.</string>
@@ -259,6 +254,8 @@
     <string name="cloze_note_required">Boşluklu Türden Not Gerekiyor</string>
     <string name="cloze_not_found_message">Boşluklu türden not bulunmuyor, Not Düzenleyiciyi açın ya da Boşluklu türden bir not ekledikten sonra yeniden deneyin.</string>
     <string name="open">Aç</string>
+    <string name="change_cloze_number">Boşluk numarasını değiştir</string>
+    <string name="cloze_number">Boşluk numarası:</string>
     <!-- Outdated WebView dialog -->
     <string name="webview_update_message">Sistem WebView\'su güncel değil. Bazı özellikler doğru çalışmayacak. Lütfen güncelleyin.\n\nYüklü sürüm: %1$d\nGereken en düşük sürüm: %2$d</string>
 </resources>

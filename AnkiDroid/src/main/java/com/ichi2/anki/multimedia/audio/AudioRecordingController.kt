@@ -13,7 +13,7 @@
  *  You should have received a copy of the GNU General Public License along with
  *  this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.ichi2.audio
+package com.ichi2.anki.multimedia.audio
 
 import android.app.Activity
 import android.app.Application
@@ -36,6 +36,8 @@ import com.google.android.material.button.MaterialButton
 import com.google.android.material.imageview.ShapeableImageView
 import com.google.android.material.progressindicator.LinearProgressIndicator
 import com.ichi2.anki.R
+import com.ichi2.anki.multimedia.audio.AudioRecordingController.RecordingState.AppendToRecording
+import com.ichi2.anki.multimedia.audio.AudioRecordingController.RecordingState.ImmediatePlayback
 import com.ichi2.anki.multimediacard.AudioRecorder
 import com.ichi2.anki.multimediacard.fields.FieldControllerBase
 import com.ichi2.anki.multimediacard.fields.IFieldController
@@ -46,9 +48,8 @@ import com.ichi2.anki.ui.setOnHoldListener
 import com.ichi2.anki.utils.elapsed
 import com.ichi2.anki.utils.formatAsString
 import com.ichi2.annotations.NeedsTest
-import com.ichi2.audio.AudioRecordingController.RecordingState.AppendToRecording
-import com.ichi2.audio.AudioRecordingController.RecordingState.ImmediatePlayback
-import com.ichi2.compat.CompatHelper
+import com.ichi2.compat.Compat
+import com.ichi2.compat.CompatHelper.Companion.compat
 import com.ichi2.ui.FixedTextView
 import com.ichi2.utils.Permissions.canRecordAudio
 import com.ichi2.utils.UiUtil
@@ -56,6 +57,7 @@ import timber.log.Timber
 import java.io.File
 import java.io.IOException
 import kotlin.time.Duration
+import kotlin.time.Duration.Companion.milliseconds
 
 // TODO : stop audio time view flickering
 class AudioRecordingController :
@@ -113,7 +115,7 @@ class AudioRecordingController :
         this.state = initialState
         audioRecorder = AudioRecorder()
         if (inEditField) {
-            val origAudioPath = this._field.audioPath
+            val origAudioPath = this._field.mediaPath
             var bExist = false
             if (origAudioPath != null) {
                 val f = File(origAudioPath)
@@ -428,7 +430,7 @@ class AudioRecordingController :
     }
 
     private fun discardAudio() {
-        CompatHelper.compat.vibrate(context, 20)
+        vibrate(20.milliseconds)
         setUiState(state.clear())
         tempAudioPath = generateTempAudioFile(context).also { tempAudioPath = it }
         stopAudioPlayer()
@@ -460,7 +462,7 @@ class AudioRecordingController :
 
     fun toggleSave(vibrate: Boolean = true) {
         Timber.i("recording completed")
-        if (vibrate) CompatHelper.compat.vibrate(context, 20)
+        if (vibrate) vibrate(20.milliseconds)
         stopAndSaveRecording()
         // show this snackbar only in the edit field/multimedia activity
         if (inEditField) (context as Activity).showSnackbar(context.resources.getString(R.string.audio_saved))
@@ -507,7 +509,7 @@ class AudioRecordingController :
                 }
             }
         }
-        CompatHelper.compat.vibrate(context, 20)
+        vibrate(20.milliseconds)
     }
 
     private fun resetAudioPlayer() {
@@ -583,7 +585,7 @@ class AudioRecordingController :
     }
 
     private fun saveRecording() {
-        _field.audioPath = tempAudioPath
+        _field.mediaPath = tempAudioPath
         _field.hasTemporaryMedia = true
     }
 
@@ -619,7 +621,7 @@ class AudioRecordingController :
     }
 
     private fun clearRecording() {
-        CompatHelper.compat.vibrate(context, 20)
+        vibrate(20.milliseconds)
         audioTimer.stop()
         setUiState(state.clear())
         audioRecorder.stopRecording()
@@ -687,6 +689,11 @@ class AudioRecordingController :
         }
     }
 
+    /**
+     * @see Compat.vibrate
+     */
+    private fun vibrate(duration: Duration) = compat.vibrate(context, duration)
+
     companion object {
         var isRecording = false
         var isAudioRecordingSaved = false
@@ -705,7 +712,7 @@ class AudioRecordingController :
         }
 
         fun setEditorStatus(inEditField: Boolean) {
-            this.inEditField = inEditField
+            Companion.inEditField = inEditField
         }
 
         /** File of the temporary mic record  */

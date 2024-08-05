@@ -63,11 +63,6 @@
         <item quantity="one">%d carta reiniciada</item>
         <item quantity="other">%d cartes reiniciades</item>
     </plurals>
-    <!-- Reschedule Card Dialog -->
-    <plurals name="reschedule_cards_dialog_acknowledge">
-        <item quantity="one">S\'ha replanificat %d targeta</item>
-        <item quantity="other">S\'han replanificat %d targetes</item>
-    </plurals>
     <string name="answering_error_title">Error de la base de dades</string>
     <string name="answering_error_message">No s\'ha pogut escriure a la col·lecció. La base de dades podria estar malmesa o potser no hi ha prou espai buit al disc. \n\nSi això passa més sovint, proveu de comprovar la base de dades, reparar la col·lecció o restaurar-la des d\'una còpia de seguretat. Toqueu \"opcions\" per fer-ho.\n\nTambé podria ser un error d\'AnkiDroid; Informeu de l’error perquè puguem comprovar-ho.</string>
     <string name="answering_error_report">Informa dels errors</string>
@@ -259,6 +254,8 @@
     <string name="cloze_note_required">Cloze Type Note Required</string>
     <string name="cloze_not_found_message">No Cloze type note found, open the Note Editor or try again after adding a Cloze type note.</string>
     <string name="open">Open</string>
+    <string name="change_cloze_number">Change cloze number</string>
+    <string name="cloze_number">Cloze number:</string>
     <!-- Outdated WebView dialog -->
     <string name="webview_update_message">The system WebView is outdated. Some features won’t work correctly. Please update it.\n\nInstalled version: %1$d\nMinimum required version: %2$d</string>
 </resources>

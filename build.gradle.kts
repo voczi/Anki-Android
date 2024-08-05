@@ -8,25 +8,6 @@ import java.io.ByteArrayOutputStream
 import kotlin.math.max
 
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
-buildscript {
-    configurations.configureEach {
-        resolutionStrategy.eachDependency {
-            val version = requested.version
-            if (requested.group == "org.jetbrains.kotlinx"
-                && requested.name.contains("kotlinx-serialization-runtime")
-                && (version != null && version.contains("0.11.0"))
-            ) {
-                useVersion("0.14.0")
-            }
-        }
-    }
-
-    dependencies {
-        // Stays until this is merged: https://github.com/slackhq/keeper/pull/147
-        classpath(files("${rootDir.path}/tools/keeper-gradle-plugin.jar"))
-    }
-}
-
 plugins {
     alias(libs.plugins.android.application) apply false
     alias(libs.plugins.android.library) apply false

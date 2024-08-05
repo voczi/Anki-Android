@@ -55,7 +55,7 @@
     <string name="reposition_card_dialog_message">प्रारंभ स्थितीः</string>
     <string name="reposition_card_not_new_error">केवळ नवीन कार्डे पुनर्स्थित केली जाऊ शकतात</string>
     <plurals name="reposition_card_dialog_acknowledge">
-        <item quantity="one">%d card repositioned</item>
+        <item quantity="one">%d कार्ड बदलले</item>
         <item quantity="other">%d कार्ड पुनर्स्थित केली</item>
     </plurals>
     <string name="reset_card_dialog_title">कार्ड प्रगती रीसेट करा</string>
@@ -63,15 +63,10 @@
         <item quantity="one">%d कार्ड रीसेट</item>
         <item quantity="other">%d कार्ड रीसेट</item>
     </plurals>
-    <!-- Reschedule Card Dialog -->
-    <plurals name="reschedule_cards_dialog_acknowledge">
-        <item quantity="one">%d card rescheduled</item>
-        <item quantity="other">%d कार्डे शेड्यूल केली</item>
-    </plurals>
     <string name="answering_error_title">डेटाबेस त्रुटी</string>
     <string name="answering_error_message">संग्रहात लेखन अयशस्वी. डेटाबेस दूषित होऊ शकतो किंवा डिस्कवर पुरेशी रिक्त जागा असू शकत नाही. \N \n जर हे बर्‍याचदा घडले तर डेटाबेस तपासून पहा, संग्रह दुरुस्त करा किंवा बॅकअपमधून पुनर्संचयित करा. त्यासाठी “पर्याय” ला स्पर्श करा. \N\ किंवा हा अँकीड्रोइड बग देखील असू शकतो; कृपया त्रुटी नोंदवा जेणेकरुन आम्ही हे तपासू शकतो.</string>
     <string name="answering_error_report">अहवाल त्रुटी</string>
-    <string name="storage_full_message">There is not enough free storage space to open AnkiDroid. Free up some space to continue. </string>
+    <string name="storage_full_message">AnkiDroid उघडण्यासाठी पुरेशी मोकळी जागा नाही. सुरू ठेवण्यासाठी काही जागा सोडा.</string>
     <string name="repair_deck_dialog">आपण खरोखर डेटाबेस दुरुस्त करण्याचा प्रयत्न करू इच्छिता? \N\n प्रयत्न सुरू करण्यापूर्वी, एक प्रत सबफोल्डर \"%s\" मध्ये तयार केली जाईल.</string>
     <string name="intent_aedict_empty">वर्ग “डीफॉल्ट” रिक्त आहे</string>
     <string name="intent_aedict_category">AnkiDroid वर कार्डे जोडण्यासाठी सर्व नोटपॅड श्रेण्या काढा किंवा “डीफॉल्ट” नावाची एक जोडा</string>
@@ -84,8 +79,8 @@
     <string name="custom_study_random">डेकमधून सहजतेने x कार्ड निवडा:</string>
     <string name="custom_study_preview">शेवटच्या x दिवसात जोडलेल्या नवीन कार्डांचे पूर्वावलोकन करा:</string>
     <string name="custom_study_rebuild_deck_corrupt">सानुकूल अभ्यास डेक पुन्हा तयार करू शकलो नाही</string>
-    <string name="storage_full_title">Storage full</string>
-    <string name="storage_almost_full_title">Storage almost full</string>
+    <string name="storage_full_title">स्टोरेज भरले आहे</string>
+    <string name="storage_almost_full_title">स्टोरेज जवळजवळ भरले आहे</string>
     <string name="no_space_to_downgrade_title" tools:ignore="UnusedResources">जागा नाही</string>
     <string name="no_space_to_downgrade_content" tools:ignore="UnusedResources">AnkiDroid ला सुरू ठेवण्यासाठी %s विनामूल्य स्टोरेज स्पेस आवश्यक आहे. कृपया थोडी जागा द्या</string>
     <string name="restore_backup_title">बॅकअप पुनर्संचयित?</string>
@@ -108,9 +103,9 @@
     <string name="dialog_positive_repair">दुरुस्ती</string>
     <string name="dialog_positive_replace">पुनर्स्थित करा</string>
     <string name="dialog_collection_path_not_dir">निर्दिष्ट पथ वैध निर्देशिका नाही</string>
-    <string name="dialog_invalid_custom_certificate">The provided text does not resolve to a valid PEM-encoded X509 certificate</string>
-    <string name="dialog_invalid_custom_certificate_title">Error parsing certificate</string>
-    <string name="dialog_updated_custom_certificate">Certificate updated</string>
+    <string name="dialog_invalid_custom_certificate">प्रदान केलेला मजकूर वैध PEM-एनकोड केलेल्या X509 प्रमाणपत्राचे निराकरण करत नाही</string>
+    <string name="dialog_invalid_custom_certificate_title">प्रमाणपत्र पार्स करताना त्रुटी</string>
+    <string name="dialog_updated_custom_certificate">प्रमाणपत्र अपडेट केले</string>
     <!-- Media checking -->
     <string name="check_media_title">मीडिया तपासा?</string>
     <string name="check_media_warning">मोठ्या मीडिया संकलनासह यास बराच वेळ लागू शकेल</string>
@@ -167,7 +162,7 @@
     <string name="failed_to_apply_background_image">पार्श्वभूमी प्रतिमा %s लागू करण्यात अयशस्वी</string>
     <string name="background_image_too_large">डेक पिकर पार्श्वभूमी खूप मोठी आहे</string>
     <string name="image_max_size_allowed">कमाल प्रतिमेचा आकार %d MB अनुमत आहे</string>
-    <string name="image_dimensions_too_large">Image dimensions are too large (%1$d × %2$d)</string>
+    <string name="image_dimensions_too_large">प्रतिमेचे परिमाण खूप मोठे आहेत (%1$d × %2$d)</string>
     <!-- Global Intent handler -->
     <!-- Also used by Card Browser, not renaming to save translators effort -->
     <string name="intent_handler_failed_no_storage_permission">आवश्यक संचय परवानगी गहाळ आहे. कृपया संचयनास परवानगी द्या त्यानंतर आपल्या कृतीचा पुन्हा प्रयत्न करा.</string>
@@ -208,7 +203,7 @@
     <string name="help_dialog_exception_report_sent">अहवाल पाठवला!</string>
     <!--Sync-->
     <plurals name="sync_automatic_sync_needs_more_time">
-        <item quantity="one">An automatic sync may be triggered in %d second</item>
+        <item quantity="one">स्वयंचलित सिंक्रोनाइझेशन %d सेकंदात ट्रिगर केले जाऊ शकते</item>
         <item quantity="other">स्वयंचलित समक्रमण %d सेकंदात ट्रिगर केले जाऊ शकते</item>
     </plurals>
     <string name="metered_sync_data_warning">तुमचा इंटरनेट प्रदाता डेटा वापरासाठी पैसे आकारू शकतो</string>
@@ -226,18 +221,16 @@
     <string name="cannot_create_subdeck_for_all_decks">तुम्ही सर्व डेकसाठी सबडेक तयार करू शकत नाही</string>
     <!-- scoped storage -->
     <string name="backup_your_collection">तुमच्या संग्रहाचा बॅकअप घ्या</string>
-    <string name="backup_collection_message">You haven\'t backed up your collection in a while. You should do this now to prevent data loss</string>
+    <string name="backup_collection_message">तुम्ही काही काळापासून तुमच्या संग्रहणाचा बॅकअप घेतलेला नाही. डेटा गमावण्यापासून रोखण्यासाठी तुम्ही आता हे केले पाहिजे</string>
     <string name="button_backup">बॅकअप</string>
     <string name="button_disable_reminder">स्मरणपत्र अक्षम करा</string>
-    <string name="button_backup_later" comment="dismiss the \'Backup\' dialog for around 2 weeks">Later</string>
+    <string name="button_backup_later" comment="dismiss the \'Backup\' dialog for around 2 weeks">नंतर</string>
     <string name="button_do_not_show_again" comment="permanently dismisses a dialog">परत दाखवू नकोस</string>
     <string name="dismiss_backup_warning_title">डेटा गमावण्याची चेतावणी</string>
-    <string name="dismiss_backup_warning_new_user">        Due to Android privacy changes, your data and automated backups will be deleted from your phone if the app is uninstalled
-    </string>
-    <string name="dismiss_backup_warning_upgrade">        Due to Android privacy changes, your data and automated backups will be inaccessible if the app is uninstalled
-    </string>
+    <string name="dismiss_backup_warning_new_user">Android गोपनीयता बदलांमुळे, ॲप अनइंस्टॉल केल्याने तुमचा डेटा आणि तुमच्या फोनवरून स्वयंचलित बॅकअप हटवले जातील</string>
+    <string name="dismiss_backup_warning_upgrade">Android गोपनीयता बदलांमुळे, ॲप अनइंस्टॉल केल्यास तुमचा डेटा आणि स्वयंचलित बॅकअप प्रवेशयोग्य असतील</string>
     <string name="deck_already_exists">डेक आधीच अस्तित्वात आहे</string>
-    <string name="create_deck_numeric_hint">If you have deck ordering issues (e.g. ‘10’ appears before ‘2’), replace ‘2’ with ‘02’</string>
+    <string name="create_deck_numeric_hint">तुम्हाला डेक ऑर्डरिंग समस्या असल्यास (उदा. \'10\' \'2\' च्या आधी दिसतो), \'2\' ला \'02\' ने बदला</string>
     <!-- Set Due Date -->
     <string name="set_due_date_match_interval" comment="when setting a card\'s due date, this checkbox also changes the interval of the card">मध्यांतर समान मूल्यावर सेट करा</string>
     <plurals name="set_due_date_single_day_label" comment="a date control is provided afterwards">
@@ -257,8 +250,10 @@
     <string name="set_due_date_range_end" comment="\'Set Due Date\' may change the due date of a card to a random number of days in the future. This labels the \'maximum\' value of this range (inclusive)">To</string>
     <!-- Instant Note Editor -->
     <string name="cloze_note_required">क्लोज टाईप नोट आवश्यक आहे</string>
-    <string name="cloze_not_found_message">No Cloze type note found, open the Note Editor or try again after adding a Cloze type note.</string>
+    <string name="cloze_not_found_message">कोणतीही क्लोज टाईप टीप आढळली नाही, नोट एडिटर उघडा किंवा क्लोज टाईप टीप जोडल्यानंतर पुन्हा प्रयत्न करा.</string>
     <string name="open">उघड</string>
+    <string name="change_cloze_number">बंद क्रमांक बदला</string>
+    <string name="cloze_number">Cloze number:</string>
     <!-- Outdated WebView dialog -->
-    <string name="webview_update_message">The system WebView is outdated. Some features won’t work correctly. Please update it.\n\nInstalled version: %1$d\nMinimum required version: %2$d</string>
+    <string name="webview_update_message">WebView प्रणाली जुनी आहे. काही वैशिष्ट्ये योग्यरित्या कार्य करू शकत नाहीत. कृपया ते अपडेट करा.\n\nस्थापित आवृत्ती: %1$d\nकिमान आवश्यक आवृत्ती: %2$d</string>
 </resources>

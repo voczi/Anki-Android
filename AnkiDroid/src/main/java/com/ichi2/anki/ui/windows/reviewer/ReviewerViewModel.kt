@@ -15,6 +15,9 @@
  */
 package com.ichi2.anki.ui.windows.reviewer
 
+import android.text.style.RelativeSizeSpan
+import androidx.core.text.buildSpannedString
+import androidx.core.text.inSpans
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
@@ -28,11 +31,11 @@ import com.ichi2.anki.Reviewer
 import com.ichi2.anki.asyncIO
 import com.ichi2.anki.cardviewer.CardMediaPlayer
 import com.ichi2.anki.launchCatchingIO
+import com.ichi2.anki.noteeditor.NoteEditorLauncher
 import com.ichi2.anki.pages.AnkiServer
 import com.ichi2.anki.pages.CardInfoDestination
 import com.ichi2.anki.pages.DeckOptionsDestination
 import com.ichi2.anki.previewer.CardViewerViewModel
-import com.ichi2.anki.previewer.NoteEditorDestination
 import com.ichi2.anki.reviewer.CardSide
 import com.ichi2.anki.servicelayer.MARKED_TAG
 import com.ichi2.anki.servicelayer.NoteService
@@ -96,6 +99,11 @@ class ReviewerViewModel(cardMediaPlayer: CardMediaPlayer) :
      */
     private var statesMutated = true
 
+    val answerButtonsNextTimeFlow: MutableStateFlow<AnswerButtonsNextTime?> = MutableStateFlow(null)
+    private val shouldShowNextTimes: Deferred<Boolean> = asyncIO {
+        withCol { config.get("estTimes") ?: true }
+    }
+
     init {
         ChangeManager.subscribe(this)
         launchCatchingIO {
@@ -136,6 +144,7 @@ class ReviewerViewModel(cardMediaPlayer: CardMediaPlayer) :
             while (!statesMutated) {
                 delay(50)
             }
+            updateNextTimes()
             showAnswerInternal()
             loadAndPlaySounds(CardSide.ANSWER)
             if (!autoAdvance.shouldWaitForAudio()) {
@@ -172,8 +181,8 @@ class ReviewerViewModel(cardMediaPlayer: CardMediaPlayer) :
         statesMutated = true
     }
 
-    suspend fun getEditNoteDestination(): NoteEditorDestination {
-        return NoteEditorDestination(currentCard.await().id)
+    suspend fun getEditNoteDestination(): NoteEditorLauncher {
+        return NoteEditorLauncher.EditNoteFromPreviewer(currentCard.await().id)
     }
 
     fun refreshCard() {
@@ -400,6 +409,14 @@ class ReviewerViewModel(cardMediaPlayer: CardMediaPlayer) :
         redoLabelFlow.emit(withCol { redoLabel() })
     }
 
+    private suspend fun updateNextTimes() {
+        if (!shouldShowNextTimes.await()) return
+        val state = queueState.await() ?: return
+
+        val nextTimes = AnswerButtonsNextTime.from(state)
+        answerButtonsNextTimeFlow.emit(nextTimes)
+    }
+
     override fun opExecuted(changes: OpChanges, handler: Any?) {
         launchCatchingIO { updateUndoAndRedoLabels() }
     }
@@ -410,6 +427,20 @@ class ReviewerViewModel(cardMediaPlayer: CardMediaPlayer) :
                 initializer {
                     ReviewerViewModel(soundPlayer)
                 }
+            }
+        }
+
+        fun buildAnswerButtonText(title: String, nextTime: String?): CharSequence {
+            return if (nextTime != null) {
+                buildSpannedString {
+                    inSpans(RelativeSizeSpan(0.8F)) {
+                        append(nextTime)
+                    }
+                    append("\n")
+                    append(title)
+                }
+            } else {
+                title
             }
         }
     }

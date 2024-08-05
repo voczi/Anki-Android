@@ -59,6 +59,13 @@ class InstantEditorViewModel : ViewModel(), OnErrorListener {
     val currentClozeNumber: Int
         get() = _currentClozeNumber.value
 
+    // List to store the cloze integers
+    private val intClozeList = mutableListOf<Int>()
+
+    /** The number of words which are marked as cloze deletions */
+    @VisibleForTesting
+    val clozeDeletionCount get() = intClozeList.size
+
     private val _currentClozeMode = MutableStateFlow(InstantNoteEditorActivity.ClozeMode.INCREMENT)
 
     val currentClozeMode: StateFlow<InstantNoteEditorActivity.ClozeMode> = _currentClozeMode.asStateFlow()
@@ -174,6 +181,18 @@ class InstantEditorViewModel : ViewModel(), OnErrorListener {
         }
     }
 
+    private fun shouldResetClozeNumber(number: Int) {
+        intClozeList.remove(number)
+
+        // Reset cloze number if the list is empty
+        if (intClozeList.isEmpty()) {
+            _currentClozeNumber.value = 1
+        } else {
+            // not null for sure
+            _currentClozeNumber.value = intClozeList.maxOrNull()!! + 1
+        }
+    }
+
     /**
      * Retrieves all cloze text fields from the current editor note's note type.
      *
@@ -229,20 +248,18 @@ class InstantEditorViewModel : ViewModel(), OnErrorListener {
 
         val clozeText: String?
 
-        val punctuation: String? = matcher?.groups?.get(2)?.value
-        if (!punctuation.isNullOrEmpty()) {
-            val capturedWord = matcher.groups[1]?.value
-            clozeText = "{{c$currentClozeNumber::$capturedWord}}$punctuation"
-        } else {
-            clozeText = "{{c$currentClozeNumber::$text}}"
+        val clozeNumber = currentClozeNumber
+        if (currentClozeMode.value == InstantNoteEditorActivity.ClozeMode.INCREMENT) {
+            incrementClozeNumber()
         }
+        intClozeList.add(clozeNumber)
 
-        when (currentClozeMode.value) {
-            InstantNoteEditorActivity.ClozeMode.INCREMENT -> { incrementClozeNumber() }
-            InstantNoteEditorActivity.ClozeMode.NO_INCREMENT -> {
-                // Do nothing here
-            }
-        }
+        // Extract the first, second, and third regex groups from the matcher
+        val punctuationAtStart: String? = matcher?.groups?.get(1)?.value
+        val capturedWord: String? = matcher?.groups?.get(2)?.value
+        val punctuationAtEnd: String? = matcher?.groups?.get(4)?.value
+
+        clozeText = "$punctuationAtStart{{c$clozeNumber::$capturedWord}}$punctuationAtEnd"
 
         return clozeText
     }
@@ -260,7 +277,7 @@ class InstantEditorViewModel : ViewModel(), OnErrorListener {
      */
     fun getWordClozeNumber(word: String): Int? {
         val matcher = clozePattern.find(word)
-        return matcher?.groups?.get(1)?.value?.toIntOrNull()
+        return matcher?.groups?.get(2)?.value?.toIntOrNull()
     }
 
     fun getWordsFromFieldText(): List<String> {
@@ -305,6 +322,15 @@ class InstantEditorViewModel : ViewModel(), OnErrorListener {
         return combinedWords
     }
 
+    fun updateClozeNumber(word: String, newClozeNumber: Int): String {
+        return clozePattern.replace(word) { matchResult ->
+            val punctutationAtStart = matchResult.groupValues[1]
+            val content = matchResult.groupValues[3]
+            val punctutationAtEnd = matchResult.groupValues[4]
+            "$punctutationAtStart{{c$newClozeNumber::$content}}$punctutationAtEnd"
+        }
+    }
+
     /**
      * Removes the cloze deletion marker and surrounding delimiters from a word.
      *
@@ -315,7 +341,7 @@ class InstantEditorViewModel : ViewModel(), OnErrorListener {
     fun getCleanClozeWords(word: String): String {
         val regex = clozePattern
         return regex.replace(word) { matchResult ->
-            (matchResult.groups[2]?.value ?: "") + (matchResult.groups[3]?.value ?: "")
+            (matchResult.groups[1]?.value ?: "") + (matchResult.groups[3]?.value ?: "") + (matchResult.groups[4]?.value ?: "")
         }
     }
 
@@ -330,14 +356,23 @@ class InstantEditorViewModel : ViewModel(), OnErrorListener {
      */
     private fun processClozeUndo(text: String): String? {
         val matchResult = clozePattern.find(text)
-        val capturedClozeNumber = matchResult?.groups?.get(1)?.value
+        val capturedClozeNumber = matchResult?.groups?.get(2)?.value
         if (capturedClozeNumber != null && currentClozeNumber - capturedClozeNumber.toInt() == 1) {
             decrementClozeNumber()
         }
-        if (matchResult?.groups?.get(3)?.value != null) {
-            return matchResult.groups[2]?.value + matchResult.groups[3]?.value
+
+        if (matchResult == null) {
+            Timber.d("No match found for the input text")
+            return null
         }
-        return matchResult?.groups?.get(2)?.value
+
+        matchResult.groups[2]?.value?.toInt()?.let { shouldResetClozeNumber(it) }
+
+        val punctuationAtStart: String? = matchResult?.groups?.get(1)?.value ?: ""
+        val capturedWord: String? = matchResult?.groups?.get(3)?.value ?: ""
+        val punctuationAtEnd: String? = matchResult?.groups?.get(4)?.value ?: ""
+
+        return punctuationAtStart + capturedWord + punctuationAtEnd
     }
 
     fun setEditorMode(mode: InstantNoteEditorActivity.EditMode) {
@@ -351,7 +386,10 @@ class InstantEditorViewModel : ViewModel(), OnErrorListener {
 
     fun toggleClozeMode() {
         val newMode = when (_currentClozeMode.value) {
-            InstantNoteEditorActivity.ClozeMode.INCREMENT -> InstantNoteEditorActivity.ClozeMode.NO_INCREMENT
+            InstantNoteEditorActivity.ClozeMode.INCREMENT -> {
+                decrementClozeNumber()
+                InstantNoteEditorActivity.ClozeMode.NO_INCREMENT
+            }
             InstantNoteEditorActivity.ClozeMode.NO_INCREMENT -> {
                 incrementClozeNumber()
                 InstantNoteEditorActivity.ClozeMode.INCREMENT
@@ -408,7 +446,7 @@ sealed class SaveNoteResult {
  * used in educational materials. The pattern follows the format:
  * {{c`number`::`content`}} (optional punctuation)
  */
-val clozePattern = Regex("""\{\{c(\d+)::([^}]+?)\}\}(\p{Punct}+)?""")
+val clozePattern = Regex("""(\p{Punct}+)?\{\{c(\d+)::([^}]+?)\}\}(\p{Punct}+)?""")
 
 private val punctuationPattern = Regex("""\p{Punct}+$""")
 
@@ -416,4 +454,4 @@ private val punctuationPattern = Regex("""\p{Punct}+$""")
 private val spaceRegex = Regex("\\s+")
 
 /** Used to build cloze text here word is not null **/
-private val clozeBuilderPattern = "(\\w+)(\\p{Punct}*)".toRegex()
+private val clozeBuilderPattern = "(\\p{Punct}*)((?:\\w|\\p{Pd}|\\p{Pc}|'|(\\(\\w+\\)))+)(\\p{Punct}*)".toRegex()
