@@ -408,11 +408,10 @@ class ReviewerFragment :
     }
 
     private fun launchAddNote() {
-        // TODO: add answerTimer.pause() here after https://github.com/ankidroid/Anki-Android/pull/16896 is merged
-        val intent = Intent(context, NoteEditor::class.java).apply {
-            putExtra(NoteEditor.EXTRA_CALLER, NoteEditor.CALLER_REVIEWER_ADD)
+        lifecycleScope.launch {
+            val intent = viewModel.getAddNoteDestination().getIntent(requireContext())
+            noteEditorLauncher.launch(intent)
         }
-        noteEditorLauncher.launch(intent)
     }
 
     private fun launchCardInfo() {
