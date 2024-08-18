@@ -183,6 +183,10 @@ class ReviewerViewModel(cardMediaPlayer: CardMediaPlayer) :
         return NoteEditorLauncher.EditNoteFromPreviewer(currentCard.await().id)
     }
 
+    fun getAddNoteDestination(): NoteEditorLauncher {
+        return NoteEditorLauncher.AddNoteFromReviewer()
+    }
+
     fun refreshCard() {
         launchCatchingIO {
             updateCurrentCard()
